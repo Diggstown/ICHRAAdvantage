@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import ichraLogo from "../assets/ichra-advantage-logo.svg";
+import ichraLogo from "../assets/ichra-advantage-logo-new.png";
 
 export default function Header() {
   const [location] = useLocation();

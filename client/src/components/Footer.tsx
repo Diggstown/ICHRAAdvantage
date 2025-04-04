@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Facebook, Twitter, Linkedin } from "lucide-react";
-import ichraLogo from "../assets/ichra-advantage-logo.svg";
+import ichraLogo from "../assets/ichra-advantage-logo-new.png";
 
 export default function Footer() {
   return (
