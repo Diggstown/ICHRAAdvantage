@@ -1,5 +1,6 @@
 import { pgTable, text, serial, integer, numeric, timestamp, boolean, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { relations } from "drizzle-orm";
 import { z } from "zod";
 
 // Users table for authentication
@@ -14,6 +15,11 @@ export const users = pgTable("users", {
   role: text("role").default("business").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+// Define user relations
+export const usersRelations = relations(users, ({ many }) => ({
+  businesses: many(businesses),
+}));
 
 // Business entity table
 export const businesses = pgTable("businesses", {
@@ -31,6 +37,15 @@ export const businesses = pgTable("businesses", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Define business relations
+export const businessesRelations = relations(businesses, ({ one, many }) => ({
+  user: one(users, {
+    fields: [businesses.userId],
+    references: [users.id],
+  }),
+  enrollments: many(enrollments),
+}));
+
 // ICHRA plans table
 export const ichraPlans = pgTable("ichra_plans", {
   id: serial("id").primaryKey(),
@@ -41,6 +56,11 @@ export const ichraPlans = pgTable("ichra_plans", {
   features: json("features").notNull(),
   isPopular: boolean("is_popular").default(false),
 });
+
+// Define ICHRA plan relations
+export const ichraPlansRelations = relations(ichraPlans, ({ many }) => ({
+  enrollments: many(enrollments),
+}));
 
 // Enrollment table
 export const enrollments = pgTable("enrollments", {
@@ -54,6 +74,18 @@ export const enrollments = pgTable("enrollments", {
   additionalNotes: text("additional_notes"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+// Define enrollment relations
+export const enrollmentsRelations = relations(enrollments, ({ one }) => ({
+  business: one(businesses, {
+    fields: [enrollments.businessId],
+    references: [businesses.id],
+  }),
+  plan: one(ichraPlans, {
+    fields: [enrollments.planId],
+    references: [ichraPlans.id],
+  }),
+}));
 
 // Create schema validation
 export const insertUserSchema = createInsertSchema(users).omit({
