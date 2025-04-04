@@ -92,6 +92,7 @@ export default function EnrollmentWizard() {
 
   // Update enrollment data from child components
   const updateEnrollmentData = (data: any) => {
+    console.log("Updating enrollment data:", data);
     setEnrollmentData(prevData => ({
       ...prevData,
       ...data

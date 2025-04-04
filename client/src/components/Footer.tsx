@@ -33,7 +33,7 @@ export default function Footer() {
         <p className="mt-8 text-center text-base text-gray-300">
           &copy; {new Date().getFullYear()} ICHRA Advantage. All rights reserved.
         </p>
-        <p className="mt-2 text-center text-sm text-gray-300">
+        <p className="mt-2 text-center text-sm text-white">
           Reimbursements Reimagined
         </p>
       </div>

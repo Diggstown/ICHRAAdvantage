@@ -127,7 +127,6 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
                     onValueChange={(value) => handlePlanChange(parseInt(value))}
                     value={field.value ? field.value.toString() : undefined}
                     className="grid grid-cols-1 gap-6 pt-2"
-                    defaultValue={field.value ? field.value.toString() : undefined}
                   >
                     {plans.map((plan: any) => (
                       <div key={plan.id} className="relative">
@@ -239,8 +238,11 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
                       <Input 
                         type="number" 
                         className="pl-8" 
-                        {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                        value={field.value || ''}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === '' ? 0 : parseFloat(value));
+                        }}
                       />
                     </div>
                   </FormControl>
