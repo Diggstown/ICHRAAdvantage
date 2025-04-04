@@ -22,14 +22,14 @@ export default function HeroSection() {
               <div className="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start">
                 <div className="rounded-md shadow">
                   <Link href="/enroll">
-                    <Button size="lg" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-600 md:py-4 md:text-lg md:px-10">
+                    <Button size="lg" className="w-full bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-600 md:py-2 md:text-base md:px-8">
                       Start enrollment
                     </Button>
                   </Link>
                 </div>
                 <div className="mt-3 sm:mt-0 sm:ml-3">
                   <Link href="/about-ichra">
-                    <Button size="lg" variant="outline" className="w-full flex items-center justify-center px-8 py-3 border border-primary text-base font-medium rounded-md text-primary bg-white hover:bg-blue-50 md:py-4 md:text-lg md:px-10">
+                    <Button size="lg" variant="outline" className="w-full border-primary text-primary hover:bg-blue-50 md:py-2 md:text-base md:px-8">
                       Learn more
                     </Button>
                   </Link>

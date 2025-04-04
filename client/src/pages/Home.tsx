@@ -51,7 +51,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-12 max-w-lg mx-auto grid gap-8 md:grid-cols-3 lg:max-w-none">
+            <div className="mt-12 max-w-7xl mx-auto grid gap-5 sm:grid-cols-1 md:grid-cols-3">
               <ProcessStep number={1} title="Create an account">
                 Register your business and provide basic information about your company and workforce demographics.
               </ProcessStep>
@@ -79,14 +79,14 @@ export default function Home() {
           <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
             <div className="inline-flex rounded-md shadow">
               <Link href="/enroll">
-                <Button className="px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white hover:bg-gray-100">
+                <Button size="lg" className="bg-white text-primary hover:bg-gray-100">
                   Get started
                 </Button>
               </Link>
             </div>
             <div className="ml-3 inline-flex rounded-md shadow">
               <Link href="/about-ichra">
-                <Button variant="outline" className="px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-700 bg-opacity-60 hover:bg-opacity-70">
+                <Button size="lg" variant="outline" className="text-white border-white hover:bg-primary-700 hover:bg-opacity-70">
                   Learn more
                 </Button>
               </Link>
@@ -106,9 +106,9 @@ interface ProcessStepProps {
 
 function ProcessStep({ number, title, children }: ProcessStepProps) {
   return (
-    <div className="flex flex-col rounded-lg shadow-lg overflow-hidden">
+    <div className="flex flex-col h-full rounded-lg shadow-lg overflow-hidden">
       <div className="flex-shrink-0 bg-primary h-2"></div>
-      <div className="flex-1 bg-white p-6 flex flex-col justify-between">
+      <div className="flex-1 bg-white p-6 flex flex-col justify-between h-full">
         <div className="flex-1">
           <div className="flex items-center">
             <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">

@@ -38,11 +38,13 @@ export default function Header() {
             </nav>
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/login" className="hidden md:inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-md text-primary bg-white hover:bg-blue-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
-                Log in
+            <Link href="/login">
+              <Button variant="outline" className="hidden md:inline-flex">Log in</Button>
             </Link>
-            <Link href="/enroll" className="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+            <Link href="/enroll">
+              <Button className="inline-flex bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-600">
                 Get Started
+              </Button>
             </Link>
             <button
               type="button"
