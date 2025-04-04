@@ -37,6 +37,9 @@ export default function EmployeeClasses({ classesData = [], enrollmentId, onData
   // Mutation for saving employee classes
   const mutation = useMutation({
     mutationFn: async (data: { employeeClasses: EmployeeClass[] }) => {
+      if (!enrollmentId || enrollmentId === 0) {
+        throw new Error("Invalid enrollment ID. Please complete the plan selection step first.");
+      }
       const response = await apiRequest("PUT", `/api/enrollment/${enrollmentId}/classes`, data);
       return await response.json();
     },
@@ -92,6 +95,16 @@ export default function EmployeeClasses({ classesData = [], enrollmentId, onData
         <h3 className="text-lg font-semibold">Define Employee Classes</h3>
         <p className="text-gray-500">Create classes to specify different allowance amounts for different employee groups</p>
       </div>
+      
+      {(!enrollmentId || enrollmentId === 0) && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Enrollment Not Found</AlertTitle>
+          <AlertDescription>
+            Please return to the Plan Selection step and select a plan before defining employee classes.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Current Classes */}
       <div className="space-y-4">
@@ -229,7 +242,7 @@ export default function EmployeeClasses({ classesData = [], enrollmentId, onData
       <div className="pt-4 flex justify-center">
         <Button 
           onClick={saveClasses} 
-          disabled={classes.length === 0 || mutation.isPending}
+          disabled={classes.length === 0 || mutation.isPending || !enrollmentId || enrollmentId === 0}
           size="lg"
         >
           {mutation.isPending ? "Saving..." : "Save Employee Classes"}

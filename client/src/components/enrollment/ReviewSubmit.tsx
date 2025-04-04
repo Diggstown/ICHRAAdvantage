@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
 interface ReviewSubmitProps {
@@ -25,6 +26,9 @@ export default function ReviewSubmit({ enrollmentData, onComplete }: ReviewSubmi
   // Mutation for finalizing enrollment
   const mutation = useMutation({
     mutationFn: async (data: { additionalNotes: string }) => {
+      if (!enrollmentData.enrollmentId || enrollmentData.enrollmentId === 0) {
+        throw new Error("Invalid enrollment ID. Please complete all previous steps first.");
+      }
       const response = await apiRequest("PUT", `/api/enrollment/${enrollmentData.enrollmentId}/finalize`, data);
       return await response.json();
     },
@@ -46,6 +50,14 @@ export default function ReviewSubmit({ enrollmentData, onComplete }: ReviewSubmi
 
   // Submit final enrollment
   const finalizeEnrollment = () => {
+    if (!enrollmentData.employeeClasses || enrollmentData.employeeClasses.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Incomplete Enrollment",
+        description: "Please define at least one employee class before finalizing enrollment.",
+      });
+      return;
+    }
     mutation.mutate({ additionalNotes });
   };
 
@@ -55,6 +67,26 @@ export default function ReviewSubmit({ enrollmentData, onComplete }: ReviewSubmi
         <h3 className="text-lg font-semibold">Review Your Enrollment</h3>
         <p className="text-gray-500">Please review your information before submitting your ICHRA enrollment</p>
       </div>
+      
+      {(!enrollmentData.enrollmentId || enrollmentData.enrollmentId === 0) && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Incomplete Enrollment</AlertTitle>
+          <AlertDescription>
+            Please complete all previous steps before finalizing your enrollment.
+          </AlertDescription>
+        </Alert>
+      )}
+      
+      {enrollmentData.employeeClasses.length === 0 && (
+        <Alert className="mb-4 border-yellow-500 bg-yellow-50">
+          <AlertCircle className="h-4 w-4 text-yellow-500" />
+          <AlertTitle className="text-yellow-800">Missing Employee Classes</AlertTitle>
+          <AlertDescription className="text-yellow-700">
+            Please define at least one employee class before finalizing enrollment.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Business Information */}
       <Card>
@@ -173,7 +205,12 @@ export default function ReviewSubmit({ enrollmentData, onComplete }: ReviewSubmi
       <div className="pt-4 flex justify-center">
         <Button 
           onClick={finalizeEnrollment} 
-          disabled={mutation.isPending}
+          disabled={
+            mutation.isPending || 
+            !enrollmentData.enrollmentId || 
+            enrollmentData.enrollmentId === 0 || 
+            enrollmentData.employeeClasses.length === 0
+          }
           size="lg"
           className="bg-green-600 hover:bg-green-700"
         >

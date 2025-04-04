@@ -55,6 +55,25 @@ export default function EnrollmentWizard() {
 
   // Handle Next button click
   const handleNext = () => {
+    // Validate critical data before proceeding
+    if (currentStep === 2 && (!enrollmentData.businessId || enrollmentData.businessId === 0)) {
+      toast({
+        variant: "destructive",
+        title: "Cannot Proceed",
+        description: "Please complete the business registration step first.",
+      });
+      return;
+    }
+    
+    if (currentStep === 3 && (!enrollmentData.enrollmentId || enrollmentData.enrollmentId === 0)) {
+      toast({
+        variant: "destructive",
+        title: "Cannot Proceed",
+        description: "Please complete the plan selection step first.",
+      });
+      return;
+    }
+    
     if (currentStep < STEP_LABELS.length) {
       setCurrentStep(currentStep + 1);
       // Scroll to top when moving to next step
