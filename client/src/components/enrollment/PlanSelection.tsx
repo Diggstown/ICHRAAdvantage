@@ -37,13 +37,16 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
   });
   
   // Get all plans
-  const plansQuery = useQuery({
+  const plansQuery = useQuery<any[]>({
     queryKey: ['/api/plans'],
   });
   
   // Mutation for plan selection
   const mutation = useMutation({
     mutationFn: async (data: PlanSelectionType) => {
+      if (!businessId || businessId === 0) {
+        throw new Error("Invalid business ID. Please go back to the business information step.");
+      }
       const response = await apiRequest("POST", `/api/business/${businessId}/plan`, data);
       return await response.json();
     },
@@ -72,7 +75,8 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
   // Calculate recommended budget based on company size and plan selection
   const calculateRecommendedBudget = () => {
     const planId = form.getValues("planId");
-    const plan = plansQuery.data?.find((p: any) => p.id === planId);
+    const data = plansQuery.data || [];
+    const plan = data.find((p: any) => p.id === planId);
     if (!plan) return 0;
     
     return plan.monthlyAmount;
@@ -121,7 +125,7 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
                 <FormControl>
                   <RadioGroup
                     onValueChange={(value) => handlePlanChange(parseInt(value))}
-                    defaultValue={field.value ? field.value.toString() : undefined}
+                    value={field.value ? field.value.toString() : undefined}
                     className="grid grid-cols-1 gap-6 pt-2"
                   >
                     {plans.map((plan: any) => (
