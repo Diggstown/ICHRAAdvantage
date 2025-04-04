@@ -1,15 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import ichraLogo from "../../assets/ichra-advantage-logo.svg";
 
 export default function HeroSection() {
   return (
     <div className="relative bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:w-full lg:pb-28 xl:pb-32">
-          <div className="px-4 pt-6 sm:px-6 flex justify-center lg:justify-start">
-            <img src={ichraLogo} alt="ICHRA Advantage" className="h-16 w-auto" />
-          </div>
+
           <div className="mt-8 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
             <div className="sm:text-center lg:text-left">
               <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
@@ -29,7 +26,7 @@ export default function HeroSection() {
                 </div>
                 <div className="mt-3 sm:mt-0 sm:ml-3">
                   <Link href="/about-ichra">
-                    <Button size="lg" variant="outline" className="w-full border-primary text-primary hover:bg-blue-50 md:py-2 md:text-base md:px-8">
+                    <Button size="lg" variant="outline" className="w-full border-primary text-white bg-primary hover:bg-primary/90 md:py-2 md:text-base md:px-8">
                       Learn more
                     </Button>
                   </Link>
