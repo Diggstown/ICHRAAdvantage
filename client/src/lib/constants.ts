@@ -1,6 +1,6 @@
 // U.S. States for dropdown
 export const stateOptions = [
-  { value: "", label: "Select state" },
+  { value: "select-state", label: "Select state" },
   { value: "AL", label: "Alabama" },
   { value: "AK", label: "Alaska" },
   { value: "AZ", label: "Arizona" },
@@ -56,7 +56,7 @@ export const stateOptions = [
 
 // Industry options for dropdown
 export const industryOptions = [
-  { value: "", label: "Select industry" },
+  { value: "select-industry", label: "Select industry" },
   { value: "healthcare", label: "Healthcare" },
   { value: "technology", label: "Technology" },
   { value: "education", label: "Education" },
@@ -76,7 +76,7 @@ export const industryOptions = [
 
 // Company size options for dropdown
 export const companySizeOptions = [
-  { value: "", label: "Select range" },
+  { value: "select-range", label: "Select range" },
   { value: "1-10", label: "1-10" },
   { value: "11-50", label: "11-50" },
   { value: "51-100", label: "51-100" },
