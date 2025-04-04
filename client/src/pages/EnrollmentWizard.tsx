@@ -152,11 +152,11 @@ export default function EnrollmentWizard() {
   };
 
   return (
-    <div className="py-16 bg-gradient-to-b from-white to-blue-50">
+    <div className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-            Start your <span className="text-primary">ICHRA</span> enrollment
+            Start your <span className="text-primary font-bold">ICHRA</span> enrollment
           </h2>
           <p className="mt-4 text-lg text-gray-600">
             Complete the steps below to set up your health reimbursement plan for your business.
