@@ -22,19 +22,21 @@ export default function Header() {
                 <img src={ichraLogo} alt="ICHRA Advantage logo" className="h-12 w-auto" />
               </Link>
             </div>
-            <nav className="hidden md:ml-10 md:flex md:space-x-10">
-              <NavLink href="/" isActive={location === "/"}>
-                Home
-              </NavLink>
-              <NavLink href="/about-ichra" isActive={location === "/about-ichra"}>
-                About ICHRA
-              </NavLink>
-              <NavLink href="/for-employers" isActive={location === "/for-employers"}>
-                For Employers
-              </NavLink>
-              <NavLink href="/resources" isActive={location === "/resources"}>
-                Resources
-              </NavLink>
+            <nav className="hidden md:ml-10 md:flex">
+              <div className="flex space-x-8">
+                <NavLink href="/" isActive={location === "/"}>
+                  Home
+                </NavLink>
+                <NavLink href="/about-ichra" isActive={location === "/about-ichra"}>
+                  About ICHRA
+                </NavLink>
+                <NavLink href="/for-employers" isActive={location === "/for-employers"}>
+                  For Employers
+                </NavLink>
+                <NavLink href="/resources" isActive={location === "/resources"}>
+                  Resources
+                </NavLink>
+              </div>
             </nav>
           </div>
           <div className="flex items-center space-x-4">
@@ -109,7 +111,7 @@ function NavLink({ href, isActive, children }: NavLinkProps) {
     <Link 
       href={href}
       className={cn(
-        "inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 transition-colors",
+        "inline-flex items-center px-3 pt-1 text-sm font-medium border-b-2 transition-colors",
         isActive
           ? "text-primary border-primary font-semibold"
           : "text-gray-600 hover:text-primary hover:border-primary/50 border-transparent"
