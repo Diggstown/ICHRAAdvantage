@@ -1,4 +1,4 @@
-import type { Express, Request, Response } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
@@ -43,27 +43,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Business registration - first step of enrollment
+  // Business Registration - first step of enrollment
   app.post("/api/business/register", async (req: Request, res: Response) => {
     try {
       const businessData = businessRegistrationSchema.parse(req.body);
       
-      // Check if email is already registered
-      const existingUser = await storage.getUserByEmail(businessData.email);
-      if (existingUser) {
-        return res.status(409).json({ message: "Email already registered" });
-      }
+      // First check if email is already registered or create new user
+      let user = await storage.getUserByEmail(businessData.email);
       
-      // Create user account
-      const user = await storage.createUser({
-        username: businessData.email,
-        password: "temppassword", // In a real application, this would be hashed and more secure
-        firstName: businessData.firstName,
-        lastName: businessData.lastName,
-        email: businessData.email,
-        phone: businessData.phone,
-        role: "business"
-      });
+      if (!user) {
+        // Create user account
+        user = await storage.createUser({
+          username: businessData.email,
+          password: "temppassword", // In a real application, this would be hashed and more secure
+          firstName: businessData.firstName,
+          lastName: businessData.lastName,
+          email: businessData.email,
+          phone: businessData.phone,
+          role: "business"
+        });
+      }
       
       // Create business profile
       const business = await storage.createBusiness({
