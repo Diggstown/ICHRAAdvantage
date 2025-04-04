@@ -152,18 +152,18 @@ export default function EnrollmentWizard() {
   };
 
   return (
-    <div className="py-16 bg-white">
+    <div className="py-16 bg-gradient-to-b from-white to-blue-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-            Start your ICHRA enrollment
+            Start your <span className="text-primary">ICHRA</span> enrollment
           </h2>
-          <p className="mt-4 text-lg text-gray-500">
-            Complete the steps below to set up your ICHRA plan for your business.
+          <p className="mt-4 text-lg text-gray-600">
+            Complete the steps below to set up your health reimbursement plan for your business.
           </p>
         </div>
 
-        <Card className="bg-white shadow overflow-hidden rounded-lg">
+        <Card className="bg-white shadow-lg overflow-hidden rounded-xl border-0">
           {/* Progress Indicator */}
           <ProgressIndicator 
             currentStep={currentStep} 
@@ -172,17 +172,17 @@ export default function EnrollmentWizard() {
           />
 
           {/* Form Content */}
-          <CardContent className="px-4 py-5 sm:p-6 space-y-6">
+          <CardContent className="px-6 py-8 sm:p-8 space-y-8">
             {renderCurrentStep()}
           </CardContent>
 
           {/* Form Navigation */}
-          <div className="px-4 py-3 bg-gray-50 text-right sm:px-6 flex justify-between">
+          <div className="px-6 py-4 bg-gray-50 text-right sm:px-8 flex justify-between">
             <Button
               variant="outline"
               onClick={handlePrevious}
               disabled={currentStep === 1}
-              className="py-2 px-4"
+              className="py-2 px-5 border-gray-300 hover:bg-blue-50 transition-colors"
             >
               Previous
             </Button>
@@ -190,7 +190,7 @@ export default function EnrollmentWizard() {
             {currentStep < STEP_LABELS.length && (
               <Button
                 onClick={handleNext}
-                className="py-2 px-4"
+                className="py-2 px-5 bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-600 transition-colors"
               >
                 Next: {STEP_LABELS[currentStep]}
               </Button>

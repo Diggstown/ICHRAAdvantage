@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Home } from "lucide-react";
+import ichraLogo from "../assets/ichra-advantage-logo.png";
 
 export default function Header() {
   const [location] = useLocation();
@@ -15,15 +15,14 @@ export default function Header() {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-20">
           <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="flex items-center">
-                <Home className="h-8 w-auto text-primary" />
-                <span className="ml-2 text-xl font-semibold text-gray-900">ICHRAPro</span>
+                <img src={ichraLogo} alt="ICHRA Advantage logo" className="h-12 w-auto" />
               </Link>
             </div>
-            <nav className="hidden md:ml-8 md:flex md:space-x-8">
+            <nav className="hidden md:ml-10 md:flex md:space-x-10">
               <NavLink href="/" isActive={location === "/"}>
                 Home
               </NavLink>
@@ -38,16 +37,16 @@ export default function Header() {
               </NavLink>
             </nav>
           </div>
-          <div className="flex items-center">
-            <Link href="/login" className="hidden md:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+          <div className="flex items-center space-x-4">
+            <Link href="/login" className="hidden md:inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-md text-primary bg-white hover:bg-blue-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
                 Log in
             </Link>
-            <Link href="/enroll" className="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+            <Link href="/enroll" className="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
                 Get Started
             </Link>
             <button
               type="button"
-              className="md:hidden ml-4 bg-white p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+              className="md:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
               onClick={toggleMobileMenu}
             >
               <span className="sr-only">Open main menu</span>
@@ -108,10 +107,10 @@ function NavLink({ href, isActive, children }: NavLinkProps) {
     <Link 
       href={href}
       className={cn(
-        "inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2",
+        "inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 transition-colors",
         isActive
-          ? "text-gray-900 border-primary"
-          : "text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent"
+          ? "text-primary border-primary font-semibold"
+          : "text-gray-600 hover:text-primary hover:border-primary/50 border-transparent"
       )}
     >
       {children}
@@ -124,10 +123,10 @@ function MobileNavLink({ href, isActive, children }: NavLinkProps) {
     <Link 
       href={href}
       className={cn(
-        "block px-3 py-2 rounded-md text-base font-medium",
+        "block px-3 py-2 rounded-md text-base font-medium transition-colors",
         isActive
-          ? "text-white bg-primary"
-          : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+          ? "text-white bg-gradient-to-r from-primary to-blue-500"
+          : "text-gray-700 hover:text-primary hover:bg-blue-50"
       )}
     >
       {children}
