@@ -55,8 +55,12 @@ export default function EnrollmentWizard() {
 
   // Handle Next button click
   const handleNext = () => {
+    console.log("handleNext called from step", currentStep);
+    console.log("Current enrollment data:", enrollmentData);
+    
     // Validate critical data before proceeding
     if (currentStep === 2 && (!enrollmentData.businessId || enrollmentData.businessId === 0)) {
+      console.error("Cannot proceed to step 2 - missing businessId:", enrollmentData.businessId);
       toast({
         variant: "destructive",
         title: "Cannot Proceed",
@@ -66,6 +70,7 @@ export default function EnrollmentWizard() {
     }
     
     if (currentStep === 3 && (!enrollmentData.enrollmentId || enrollmentData.enrollmentId === 0)) {
+      console.error("Cannot proceed to step 3 - missing enrollmentId:", enrollmentData.enrollmentId);
       toast({
         variant: "destructive",
         title: "Cannot Proceed",
@@ -75,6 +80,7 @@ export default function EnrollmentWizard() {
     }
     
     if (currentStep < STEP_LABELS.length) {
+      console.log("Moving to step", currentStep + 1);
       setCurrentStep(currentStep + 1);
       // Scroll to top when moving to next step
       window.scrollTo(0, 0);
@@ -93,10 +99,35 @@ export default function EnrollmentWizard() {
   // Update enrollment data from child components
   const updateEnrollmentData = (data: any) => {
     console.log("Updating enrollment data:", data);
-    setEnrollmentData(prevData => ({
-      ...prevData,
-      ...data
-    }));
+    setEnrollmentData(prevData => {
+      let newData;
+      // Merge data properly, handling nested objects correctly
+      if (data.business) {
+        newData = {
+          ...prevData,
+          business: {
+            ...prevData.business,
+            ...data.business
+          }
+        };
+      } else if (data.plan) {
+        newData = {
+          ...prevData,
+          plan: {
+            ...prevData.plan,
+            ...data.plan
+          }
+        };
+      } else {
+        // Handle direct properties (like businessId or enrollmentId)
+        newData = {
+          ...prevData,
+          ...data
+        };
+      }
+      console.log("Updated enrollment data:", newData);
+      return newData;
+    });
   };
 
   // Render current step based on currentStep state
@@ -108,6 +139,7 @@ export default function EnrollmentWizard() {
             businessData={enrollmentData.business}
             onDataUpdate={(data) => updateEnrollmentData({ business: data })}
             onComplete={(businessId) => {
+              console.log("BusinessInfo onComplete received businessId:", businessId);
               updateEnrollmentData({ businessId });
               handleNext();
             }}
@@ -120,6 +152,7 @@ export default function EnrollmentWizard() {
             businessId={enrollmentData.businessId}
             onDataUpdate={(data) => updateEnrollmentData({ plan: data })}
             onComplete={(enrollmentId) => {
+              console.log("PlanSelection onComplete received enrollmentId:", enrollmentId);
               updateEnrollmentData({ enrollmentId });
               handleNext();
             }}

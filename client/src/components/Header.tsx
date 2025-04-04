@@ -23,7 +23,7 @@ export default function Header() {
               </Link>
             </div>
             <nav className="hidden md:ml-10 md:flex">
-              <div className="flex space-x-8">
+              <div className="flex space-x-6">
                 <NavLink href="/" isActive={location === "/"}>
                   Home
                 </NavLink>

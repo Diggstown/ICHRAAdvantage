@@ -48,13 +48,25 @@ export default function BusinessInfo({ businessData, onDataUpdate, onComplete }:
       return await response.json();
     },
     onSuccess: (data) => {
+      console.log("Business registration successful, received data:", data);
+      if (!data.businessId) {
+        console.error("API response missing businessId!", data);
+        toast({
+          variant: "destructive",
+          title: "Registration Error",
+          description: "The server did not return a business ID. Please try again.",
+        });
+        return;
+      }
       toast({
         title: "Business Registration Complete",
         description: "Your business information has been saved successfully.",
       });
+      console.log("Calling onComplete with businessId:", data.businessId);
       onComplete(data.businessId);
     },
     onError: (error) => {
+      console.error("Business registration error:", error);
       toast({
         variant: "destructive",
         title: "Registration Failed",
@@ -65,11 +77,26 @@ export default function BusinessInfo({ businessData, onDataUpdate, onComplete }:
 
   // Form submission handler
   const onSubmit = (data: BusinessRegistration & { termsAccepted: boolean }) => {
+    console.log("Business form submitted with data:", data);
     onDataUpdate(data);
     
-    // Remove termsAccepted from API submission
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { termsAccepted, ...apiData } = data;
+    // Create a clean copy for API submission (termsAccepted is removed)
+    const apiData: BusinessRegistration = {
+      name: data.name,
+      taxId: data.taxId,
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      zip: data.zip,
+      industry: data.industry,
+      size: data.size,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      termsAccepted: data.termsAccepted
+    };
+    console.log("Submitting to API:", apiData);
     mutation.mutate(apiData);
   };
 

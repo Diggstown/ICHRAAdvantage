@@ -44,20 +44,34 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
   // Mutation for plan selection
   const mutation = useMutation({
     mutationFn: async (data: PlanSelectionType) => {
+      console.log("Submitting plan selection with businessId:", businessId);
       if (!businessId || businessId === 0) {
+        console.error("Invalid business ID detected:", businessId);
         throw new Error("Invalid business ID. Please go back to the business information step.");
       }
       const response = await apiRequest("POST", `/api/business/${businessId}/plan`, data);
       return await response.json();
     },
     onSuccess: (data) => {
+      console.log("Plan selection successful, received data:", data);
+      if (!data.enrollmentId) {
+        console.error("API response missing enrollmentId!", data);
+        toast({
+          variant: "destructive",
+          title: "Selection Error",
+          description: "The server did not return an enrollment ID. Please try again.",
+        });
+        return;
+      }
       toast({
         title: "Plan Selection Complete",
         description: "Your plan selection has been saved successfully.",
       });
+      console.log("Calling onComplete with enrollmentId:", data.enrollmentId);
       onComplete(data.enrollmentId);
     },
     onError: (error) => {
+      console.error("Plan selection error:", error);
       toast({
         variant: "destructive",
         title: "Plan Selection Failed",
@@ -68,6 +82,8 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
 
   // Form submission handler
   const onSubmit = (data: PlanSelectionType) => {
+    console.log("Plan selection form submitted with data:", data);
+    console.log("Current businessId:", businessId);
     onDataUpdate(data);
     mutation.mutate(data);
   };
@@ -84,8 +100,11 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
   
   // Set recommended budget when plan changes
   const handlePlanChange = (planId: number) => {
+    console.log("Plan changed to:", planId);
     form.setValue("planId", planId);
-    form.setValue("monthlyBudget", calculateRecommendedBudget());
+    const recommendedBudget = calculateRecommendedBudget();
+    console.log("Setting recommended budget to:", recommendedBudget);
+    form.setValue("monthlyBudget", recommendedBudget);
   };
   
   if (plansQuery.isLoading) {
@@ -125,7 +144,7 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
                 <FormControl>
                   <RadioGroup
                     onValueChange={(value) => handlePlanChange(parseInt(value))}
-                    value={field.value ? field.value.toString() : undefined}
+                    value={field.value.toString()}
                     className="grid grid-cols-1 gap-6 pt-2"
                   >
                     {plans.map((plan: any) => (

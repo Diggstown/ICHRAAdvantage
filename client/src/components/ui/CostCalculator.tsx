@@ -58,8 +58,11 @@ export default function CostCalculator({ selectedPlanId, plans, onBudgetUpdate }
             <Input 
               id="contribution"
               type="number" 
-              value={contributionAmount}
-              onChange={(e) => setContributionAmount(parseFloat(e.target.value) || 0)}
+              value={contributionAmount || ''}
+              onChange={(e) => {
+                const value = e.target.value === '' ? 0 : parseFloat(e.target.value);
+                setContributionAmount(value);
+              }}
               className="pl-8"
             />
           </div>
