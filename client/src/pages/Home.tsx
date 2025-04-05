@@ -10,23 +10,23 @@ export default function Home() {
       {/* Hero Section */}
       <HeroSection />
       
-      {/* Stats Section */}
-      <div className="bg-blue-50 py-12">
+      {/* Stats Section - Now directly under hero without the blue gap */}
+      <div className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="text-center">
+            <div className="text-center bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition-shadow">
               <h3 className="text-5xl font-extrabold text-primary">94%</h3>
               <p className="mt-2 text-base text-gray-600">of businesses report cost savings after switching to ICHRA</p>
             </div>
-            <div className="text-center">
+            <div className="text-center bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition-shadow">
               <h3 className="text-5xl font-extrabold text-primary">30%</h3>
               <p className="mt-2 text-base text-gray-600">average reduction in administrative complexity</p>
             </div>
-            <div className="text-center">
+            <div className="text-center bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition-shadow">
               <h3 className="text-5xl font-extrabold text-primary">3.8M+</h3>
               <p className="mt-2 text-base text-gray-600">employees now covered by ICHRA plans nationwide</p>
             </div>
-            <div className="text-center">
+            <div className="text-center bg-white shadow-sm rounded-lg p-4 hover:shadow-md transition-shadow">
               <h3 className="text-5xl font-extrabold text-primary">100%</h3>
               <p className="mt-2 text-base text-gray-600">compliance with ACA regulations when properly implemented</p>
             </div>

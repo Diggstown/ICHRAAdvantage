@@ -9,11 +9,12 @@ import EmployeeClasses from "@/components/enrollment/EmployeeClasses";
 import ReviewSubmit from "@/components/enrollment/ReviewSubmit";
 import { useToast } from "@/hooks/use-toast";
 
-// Step labels for the progress indicator
+// Step labels for the progress indicator - Updated to match Thatch.ai flow
 const STEP_LABELS = [
-  "Business Registration",
-  "Plan Selection",
+  "Company Info",
+  "Plan Design",
   "Employee Classes",
+  "Effective Date",
   "Review & Submit"
 ];
 
@@ -59,12 +60,21 @@ export default function EnrollmentWizard() {
     console.log("Current enrollment data:", enrollmentData);
     
     // Validate critical data before proceeding
+    if (currentStep === 1 && (!enrollmentData.business.name || !enrollmentData.business.taxId)) {
+      toast({
+        variant: "destructive",
+        title: "Missing Information",
+        description: "Please complete all required fields in the Company Info section.",
+      });
+      return;
+    }
+    
     if (currentStep === 2 && (!enrollmentData.businessId || enrollmentData.businessId === 0)) {
       console.error("Cannot proceed to step 2 - missing businessId:", enrollmentData.businessId);
       toast({
         variant: "destructive",
         title: "Cannot Proceed",
-        description: "Please complete the business registration step first.",
+        description: "Please complete the company information step first.",
       });
       return;
     }
@@ -74,7 +84,25 @@ export default function EnrollmentWizard() {
       toast({
         variant: "destructive",
         title: "Cannot Proceed",
-        description: "Please complete the plan selection step first.",
+        description: "Please complete the plan design step first.",
+      });
+      return;
+    }
+    
+    if (currentStep === 4 && (!enrollmentData.employeeClasses || enrollmentData.employeeClasses.length === 0)) {
+      toast({
+        variant: "destructive",
+        title: "Cannot Proceed",
+        description: "Please add at least one employee class before continuing.",
+      });
+      return;
+    }
+    
+    if (currentStep === 5 && (!enrollmentData.plan.effectiveDate)) {
+      toast({
+        variant: "destructive",
+        title: "Cannot Proceed",
+        description: "Please select an effective date for your plan.",
       });
       return;
     }
@@ -133,7 +161,7 @@ export default function EnrollmentWizard() {
   // Render current step based on currentStep state
   const renderCurrentStep = () => {
     switch (currentStep) {
-      case 1:
+      case 1: // Company Info
         return (
           <BusinessInfo 
             businessData={enrollmentData.business}
@@ -145,7 +173,7 @@ export default function EnrollmentWizard() {
             }}
           />
         );
-      case 2:
+      case 2: // Plan Design
         return (
           <PlanSelection 
             planData={enrollmentData.plan}
@@ -158,7 +186,7 @@ export default function EnrollmentWizard() {
             }}
           />
         );
-      case 3:
+      case 3: // Employee Classes
         return (
           <EmployeeClasses 
             classesData={enrollmentData.employeeClasses}
@@ -167,7 +195,85 @@ export default function EnrollmentWizard() {
             onComplete={() => handleNext()}
           />
         );
-      case 4:
+      case 4: // Effective Date
+        // We'll use a simplified version of the effective date step
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-6">
+              <h3 className="text-lg font-semibold">Set Plan Effective Date</h3>
+              <p className="text-gray-500">When would you like your ICHRA plan to begin?</p>
+            </div>
+            <div className="bg-blue-50 p-4 rounded-md mb-4">
+              <p className="text-sm text-blue-800">
+                <span className="font-semibold">Recommendation:</span> Allow at least 30 days from today for proper setup and employee notification.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="p-6 border rounded-lg bg-white shadow-sm w-full max-w-md">
+                <div className="text-center">
+                  <p className="text-lg font-medium text-gray-900">Your Selected Start Date</p>
+                  <p className="mt-2 text-3xl font-bold text-primary">
+                    {enrollmentData.plan.effectiveDate 
+                      ? new Date(enrollmentData.plan.effectiveDate).toLocaleDateString('en-US', {
+                          month: 'long', 
+                          day: 'numeric', 
+                          year: 'numeric'
+                        }) 
+                      : 'Not set'}
+                  </p>
+                </div>
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-gray-500">
+                    This is the date your ICHRA plan will be active and employees can begin receiving reimbursements
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center mt-6">
+              <Button 
+                className="mr-2" 
+                variant="outline"
+                onClick={() => {
+                  // Setting the date to 60 days from now
+                  const date = new Date();
+                  date.setDate(date.getDate() + 60);
+                  updateEnrollmentData({ 
+                    plan: { 
+                      ...enrollmentData.plan, 
+                      effectiveDate: date 
+                    } 
+                  });
+                }}
+              >
+                Set to 60 days
+              </Button>
+              <Button 
+                className="mr-2" 
+                variant="outline"
+                onClick={() => {
+                  // Setting the date to 90 days from now
+                  const date = new Date();
+                  date.setDate(date.getDate() + 90);
+                  updateEnrollmentData({ 
+                    plan: { 
+                      ...enrollmentData.plan, 
+                      effectiveDate: date 
+                    } 
+                  });
+                }}
+              >
+                Set to 90 days
+              </Button>
+              <Button 
+                onClick={() => handleNext()}
+                className="bg-gradient-to-r from-primary to-blue-500"
+              >
+                Confirm Date
+              </Button>
+            </div>
+          </div>
+        );
+      case 5: // Review & Submit
         return (
           <ReviewSubmit 
             enrollmentData={enrollmentData}
