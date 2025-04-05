@@ -49,7 +49,18 @@ export default function PlanSelection({ planData, businessId, onDataUpdate, onCo
         console.error("Invalid business ID detected:", businessId);
         throw new Error("Invalid business ID. Please go back to the business information step.");
       }
-      const response = await apiRequest("POST", `/api/business/${businessId}/plan`, data);
+      
+      // Create a new object with properly formatted data
+      const formattedData = {
+        ...data,
+        // Ensure effectiveDate is a Date object, not a string
+        effectiveDate: data.effectiveDate instanceof Date ? data.effectiveDate : new Date(data.effectiveDate),
+        // Ensure monthlyBudget is a number
+        monthlyBudget: typeof data.monthlyBudget === 'string' ? parseFloat(data.monthlyBudget) : data.monthlyBudget
+      };
+      
+      console.log("Formatted data for API:", formattedData);
+      const response = await apiRequest("POST", `/api/business/${businessId}/plan`, formattedData);
       return await response.json();
     },
     onSuccess: (data) => {

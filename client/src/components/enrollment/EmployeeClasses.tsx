@@ -37,13 +37,33 @@ export default function EmployeeClasses({ classesData = [], enrollmentId, onData
   // Mutation for saving employee classes
   const mutation = useMutation({
     mutationFn: async (data: { employeeClasses: EmployeeClass[] }) => {
+      console.log("Submitting employee classes with enrollmentId:", enrollmentId);
       if (!enrollmentId || enrollmentId === 0) {
+        console.error("Invalid enrollment ID detected:", enrollmentId);
         throw new Error("Invalid enrollment ID. Please complete the plan selection step first.");
       }
-      const response = await apiRequest("PUT", `/api/enrollment/${enrollmentId}/classes`, data);
-      return await response.json();
+      
+      try {
+        const response = await apiRequest("PUT", `/api/enrollment/${enrollmentId}/classes`, data);
+        
+        // Check if response is ok
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("API error response:", errorData);
+          if (response.status === 404) {
+            throw new Error("Enrollment not found. Please complete the plan selection step first.");
+          }
+          throw new Error(errorData.message || "Failed to save employee classes");
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error("Error saving employee classes:", error);
+        throw error;
+      }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Employee classes saved successfully:", data);
       toast({
         title: "Employee Classes Saved",
         description: "Your employee class definitions have been saved successfully.",
@@ -51,6 +71,7 @@ export default function EmployeeClasses({ classesData = [], enrollmentId, onData
       onComplete();
     },
     onError: (error) => {
+      console.error("Failed to save employee classes:", error);
       toast({
         variant: "destructive",
         title: "Save Failed",

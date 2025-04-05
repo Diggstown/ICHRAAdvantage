@@ -109,11 +109,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Business not found" });
       }
       
-      const planData = planSelectionSchema.parse(req.body);
+      console.log("Received plan data for business ID:", businessId, "Data:", req.body);
+      
+      // Pre-process the request body to ensure effectiveDate is a Date object
+      let processedBody = { ...req.body };
+      
+      if (processedBody.effectiveDate && typeof processedBody.effectiveDate === 'string') {
+        processedBody.effectiveDate = new Date(processedBody.effectiveDate);
+        console.log("Converted effectiveDate string to Date object:", processedBody.effectiveDate);
+      }
+      
+      // Parse the processed data
+      let planData;
+      try {
+        planData = planSelectionSchema.parse(processedBody);
+        console.log("Validated plan data:", planData);
+      } catch (validationError) {
+        console.error("Plan data validation error:", validationError);
+        if (validationError instanceof ZodError) {
+          return res.status(400).json({
+            message: "Validation error",
+            errors: validationError.errors
+          });
+        }
+        throw validationError;
+      }
+      
       const plan = await storage.getIchraPlan(planData.planId);
       if (!plan) {
         return res.status(404).json({ message: "Plan not found" });
       }
+      
+      // Ensure monthlyBudget is a string for storage
+      const monthlyBudgetStr = typeof planData.monthlyBudget === 'number' 
+        ? planData.monthlyBudget.toString() 
+        : planData.monthlyBudget;
       
       // Create initial enrollment record
       const enrollment = await storage.createEnrollment({
@@ -121,8 +151,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         planId: planData.planId,
         status: "plan_selected",
         effectiveDate: planData.effectiveDate,
-        monthlyBudget: planData.monthlyBudget.toString()
+        monthlyBudget: monthlyBudgetStr
       });
+      
+      console.log("Created enrollment:", enrollment);
       
       // Update business status
       await storage.updateBusiness(businessId, { status: "plan_selected" });
@@ -132,7 +164,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Plan selected successfully" 
       });
     } catch (error) {
-      console.error(error);
+      console.error("Error in plan selection:", error);
       if (error instanceof ZodError) {
         const formattedError = fromZodError(error);
         return res.status(400).json({ 
@@ -149,21 +181,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const enrollmentId = parseInt(req.params.id);
       if (isNaN(enrollmentId)) {
+        console.error("Invalid enrollment ID:", req.params.id);
         return res.status(400).json({ message: "Invalid enrollment ID" });
       }
       
+      console.log("Looking up enrollment with ID:", enrollmentId);
       const enrollment = await storage.getEnrollment(enrollmentId);
       if (!enrollment) {
+        console.error("Enrollment not found with ID:", enrollmentId);
         return res.status(404).json({ message: "Enrollment not found" });
       }
       
-      const classData = employeeClassesSchema.parse(req.body);
+      console.log("Received employee classes data for enrollment ID:", enrollmentId, "Data:", req.body);
+      
+      // Validate the class data
+      let classData;
+      try {
+        classData = employeeClassesSchema.parse(req.body);
+        console.log("Validated employee classes data:", classData);
+      } catch (validationError) {
+        console.error("Employee classes validation error:", validationError);
+        if (validationError instanceof ZodError) {
+          return res.status(400).json({
+            message: "Validation error",
+            errors: validationError.errors
+          });
+        }
+        throw validationError;
+      }
       
       // Update enrollment with employee classes
       const updatedEnrollment = await storage.updateEnrollment(enrollmentId, {
         employeeClasses: classData.employeeClasses,
         status: "classes_defined"
       });
+      
+      console.log("Updated enrollment with employee classes:", updatedEnrollment);
       
       // Update business status
       await storage.updateBusiness(enrollment.businessId, { status: "classes_defined" });
@@ -173,7 +226,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Employee classes added successfully" 
       });
     } catch (error) {
-      console.error(error);
+      console.error("Error adding employee classes:", error);
       if (error instanceof ZodError) {
         const formattedError = fromZodError(error);
         return res.status(400).json({ 
