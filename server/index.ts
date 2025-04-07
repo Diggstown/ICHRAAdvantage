@@ -47,9 +47,10 @@ app.use((req, res, next) => {
     log(`Error initializing database: ${error}`, "error");
   }
   
-  await registerRoutes(app);
+ await registerRoutes(app);
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 app.listen(port, () => {
   log(`Serving on port ${port}`);
 });
+})();
