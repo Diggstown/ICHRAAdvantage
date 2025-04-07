@@ -47,8 +47,10 @@ app.use((req, res, next) => {
     await registerRoutes(app);
     log("Routes registered");
 
-    const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
-    app.listen(port, () => {
+   const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
+app.listen(port, () => {
   console.log(`🚀 App listening on port ${port}`);
 });
+})();
+
 
