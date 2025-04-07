@@ -49,10 +49,6 @@ app.use((req, res, next) => {
 
     const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
     app.listen(port, () => {
-      log(`Serving on port ${port}`);
-    });
-  } catch (err) {
-    console.error("❌ UNCAUGHT STARTUP ERROR:", err);
-    process.exit(1);
-  }
-})();
+  console.log(`🚀 App listening on port ${port}`);
+});
+
