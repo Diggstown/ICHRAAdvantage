@@ -1,1 +1,4 @@
-import "../server/index";
+import startApp from "../server/index";
+
+void startApp();
+

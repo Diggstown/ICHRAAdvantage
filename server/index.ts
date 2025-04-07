@@ -39,7 +39,7 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
+export default async function startApp() {
   try {
     console.log("🔥 App is starting up...");
 
@@ -57,6 +57,7 @@ app.use((req, res, next) => {
     console.error("❌ UNCAUGHT STARTUP ERROR:", err);
     process.exit(1);
   }
-})();
+}
+
 
 
