@@ -48,7 +48,6 @@ app.use((req, res, next) => {
   }
   
   await registerRoutes(app);
-const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 app.listen(port, () => {
   log(`Serving on port ${port}`);
 });
