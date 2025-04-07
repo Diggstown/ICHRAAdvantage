@@ -41,17 +41,22 @@ app.use((req, res, next) => {
 
 (async () => {
   try {
+    console.log("🔥 App is starting up...");
+
     await storage.initializeDefaultPlans();
-    log("Database initialized with default plans");
+    console.log("✅ Database initialized");
 
     await registerRoutes(app);
-    log("Routes registered");
+    console.log("✅ Routes registered");
 
-   const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
-app.listen(port, () => {
-  console.log(`🚀 App listening on port ${port}`);
-});
+    const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
+    app.listen(port, () => {
+      console.log(`🚀 App listening on port ${port}`);
+    });
+  } catch (err) {
+    console.error("❌ UNCAUGHT STARTUP ERROR:", err);
+    process.exit(1);
+  }
 })();
-
 
 
