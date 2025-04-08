@@ -1,8 +1,12 @@
+import path from 'path';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
 import { db } from "./db";
+
+// Get the current directory path
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 console.log("🔥 App is starting up...");
 
 const app = express();
@@ -49,7 +53,18 @@ export default async function startApp() {
     await registerRoutes(app);
     console.log("✅ Routes registered");
 
-    const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
+    const port = process.env.PORT ? parseInt(process.env.PORT) : 5050;
+
+    // Serve static files from the "public" directory
+    if (app.get("env") === "production") {
+      app.use(express.static(path.join(__dirname, "public")));
+    }
+
+    // Serve index.html for the root path
+    app.get("/", (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "index.html"));
+    });
+
     app.listen(port, () => {
       console.log(`🚀 App listening on port ${port}`);
     });
@@ -58,6 +73,3 @@ export default async function startApp() {
     process.exit(1);
   }
 }
-
-
-
