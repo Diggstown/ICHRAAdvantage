@@ -46,7 +46,7 @@ app.use((req, res, next) => {
   } catch (error) {
     log(`Error initializing database: ${error}`, "error");
   }
-  
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -66,10 +66,9 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
+  // Define the port to listen on, either from environment variable or default to 5050
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 5050;
+
   server.listen({
     port,
     host: "0.0.0.0",
